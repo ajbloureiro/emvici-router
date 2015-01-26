@@ -1,90 +1,25 @@
 var Util = require( 'findhit-util' ),
     Promise = require( 'bluebird' ),
 
-    Route = require( '../../../lib/route' ),
+    WizardRoute = require( '../../../lib/type/wizard' ),
 
     sinon = require( 'sinon' ),
     chai = require( 'chai' ),
-    expect = chai.expect;
+    expect = chai.expect
+    ;
 
 describe( "WizardRoute", function () {
-    var route;
+    it("shouldn't allow new WizarRoute, only WizardRoute.construct",function(){
 
-    before(function () {
-        route = Route.construct({
-            url: '/buy/breakfast',
-            type: 'wizard',
-            steps: [
-                { // step
-                    name: 'menu',
-                    prepare: sinon.spy(),
-                },
-                { // step
-                    name: 'drink',
-                    prepare: sinon.spy(),
-                },
+        var errorMsg = [
+        "You can't use WizardRoute directly to construct a new WizardRoute.",
+        "Please use WizardRoute.construct method instead"
+            ].join(" "),
+            initError = new Error( errorMsg );
 
-                { // branch
-                    name: 'snacks',
-                    steps: [
+        expect( function(){
+            new WizardRoute();
+        } ).to.throw( initError );
 
-                        { // branch
-                            name: 'chicken',
-                            steps: [
-
-                                { // step
-                                    name: 'wings',
-                                    prepare: sinon.spy(),
-                                },
-
-                                { // step
-                                    name: 'peitinho',
-                                    prepare: sinon.spy(),
-                                },
-
-                            ],
-
-                        },
-
-                        { // step
-                            name: 'fromage',
-                            prepare: sinon.spy(),
-                        },
-
-                    ],
-                },
-                { // step
-                    name: 'delivery',
-                    prepare: sinon.spy(),
-                }
-            ],
-        });
     });
-
-    it( "should have 6 steps", function () {
-        expect( route.steps ).to.have.length( 6 );
-    });
-
-    it( "should have 2 branches", function () {
-        expect( route.branches ).to.have.length( 2 );
-    });
-
-    describe( ".match", function () {
-        var shouldBe = function ( match, url ) {
-            it( "should" + ( match ? " NOT " : " " ) + "work with " + url, function () {
-                var ex = expect( route.match( url, 'GET' ) );
-                if ( match ) ex.to.be.ok; else ex.to.not.be.ok;
-            });
-        };
-
-        shouldBe( 1, '/buy/breakfast' );
-        shouldBe( 1, '/buy/breakfast/menu' );
-        shouldBe( 0, '/buy/breakfast/snacks' );
-        shouldBe( 0, '/buy/breakfast/snacks/chicken' );
-        shouldBe( 1, '/buy/breakfast/snacks/chicken/wings' );
-        shouldBe( 1, '/buy/breakfast/snacks/fromage' );
-        shouldBe( 0, '/buy/breakfast/free' );
-        shouldBe( 0, '/buy/breakfast/something' );
-    });
-
 });

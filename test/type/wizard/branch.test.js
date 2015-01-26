@@ -1,6 +1,6 @@
 
 
-describe( "Wizard", function () {
+describe( "Route -> Wizard", function () {
 	describe( "branch", function () {
 		it( "shouldn't save route on session")
 	})
