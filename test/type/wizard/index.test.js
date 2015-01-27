@@ -16,9 +16,16 @@ describe( "WizardRoute", function () {
         "Please use WizardRoute.construct method instead"
             ].join(" "),
             initError = new Error( errorMsg );
-
+            
         expect( function(){
-            new WizardRoute();
+            try{
+                new WizardRoute();
+            } catch (e){
+                if(e instanceof Error && e.message === initError.message)
+                    throw initError;
+                else
+                    throw new Error('asgasg');
+            }
         } ).to.throw( initError );
 
     });
