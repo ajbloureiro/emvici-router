@@ -8,7 +8,6 @@ var Util = require( 'findhit-util' ),
     chai = require( 'chai' ),
     expect = chai.expect;
 
-// -----------------------------------------------------------------------------
 
 describe( "Router", function () {
     var router;
